@@ -1,0 +1,6 @@
+[submodule "openalsoft/openal-soft"]
+	path = openalsoft/openal-soft
+	url = https://github.com/kcat/openal-soft.git
+[submodule "ice engine/ice_engine"]
+	path = ice engine/ice_engine
+	url = https://github.com/icebreakersentertainment/ice_engine.git
