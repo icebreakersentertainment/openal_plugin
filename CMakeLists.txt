@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(OPENALSOFT_PLUGIN_COMPILER_FLAGS "")
+set(OPENALSOFT_PLUGIN_DEFINITIONS "")
 if(MSVC)
   set(OPENALSOFT_PLUGIN_COMPILER_FLAGS "/EHsc /MP")
   if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -13,6 +14,14 @@ if(MSVC)
 endif()
 
 add_subdirectory(./openalsoft/openal-soft)
+
+if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo OR ICEENGINE_ENABLE_DEBUG_LOGGING)
+  list(APPEND OPENALSOFT_PLUGIN_DEFINITIONS -DICEENGINE_ENABLE_DEBUG_LOGGING)
+endif()
+
+if(ICEENGINE_ENABLE_TRACE_LOGGING)
+  list(APPEND OPENALSOFT_PLUGIN_DEFINITIONS -DICEENGINE_ENABLE_TRACE_LOGGING)
+endif()
 
 # Headers
 include_directories(include)
@@ -27,6 +36,7 @@ target_include_directories(openalsoft_plugin PRIVATE ${BOOST_INCLUDE_DIRS})
 target_include_directories(openalsoft_plugin PRIVATE ${GLM_INCLUDE_DIRS})
 target_include_directories(openalsoft_plugin PRIVATE openalsoft/openal-soft/include)
 
+target_compile_definitions(openalsoft_plugin PRIVATE ${OPENALSOFT_PLUGIN_DEFINITIONS})
 target_compile_options(openalsoft_plugin PRIVATE ${OPENALSOFT_PLUGIN_COMPILER_FLAGS})
 
 target_link_libraries(openalsoft_plugin OpenAL)
