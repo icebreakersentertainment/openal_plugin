@@ -18,6 +18,7 @@
 #include "utilities/Properties.hpp"
 #include "fs/IFileSystem.hpp"
 #include "logger/ILogger.hpp"
+#include "../src/Audio.hpp"
 
 using namespace ice_engine::audio::openalsoft::al;
 
@@ -53,33 +54,37 @@ class OpenAlSoft : public IAudioEngine
 {
 public:
 	OpenAlSoft(utilities::Properties* properties, fs::IFileSystem* fileSystem, logger::ILogger* logger);
-	virtual ~OpenAlSoft() override;
+	~OpenAlSoft() override;
 	
 	OpenAlSoft(const OpenAlSoft& other) = delete;
 
-	virtual AudioSceneHandle createAudioScene() override;
-	virtual void destroyAudioScene(const AudioSceneHandle& audioSceneHandle) override;
+	AudioSceneHandle createAudioScene() override;
+	void destroyAudioScene(const AudioSceneHandle& audioSceneHandle) override;
+
+    void tick(const AudioSceneHandle audioSceneHandle, const float32 delta) override;
 	
-	virtual void beginRender() override;
-	virtual void render(const AudioSceneHandle& audioSceneHandle) override;
-	virtual void endRender() override;
+	void beginRender() override;
+	void render(const AudioSceneHandle& audioSceneHandle) override;
+	void endRender() override;
 	
-	virtual SoundSourceHandle play(const AudioSceneHandle& audioSceneHandle, const SoundHandle& soundHandle, const glm::vec3& position) override;
+	SoundSourceHandle play(const AudioSceneHandle& audioSceneHandle, const SoundHandle& soundHandle, const glm::vec3& position) override;
 	
-	virtual void stop(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle) override;
-	virtual void stopAll(const AudioSceneHandle& audioSceneHandle) override;
+	void stop(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle) override;
+	void stopAll(const AudioSceneHandle& audioSceneHandle) override;
 	
-	virtual SoundHandle createSound(const IAudio* audio) override;
+	SoundHandle createSound(const IAudio& audio) override;
+
+    void destroy(const SoundHandle soundHandle) override;
+
+    ListenerHandle createListener(const AudioSceneHandle& audioSceneHandle, const glm::vec3& position) override;
 	
-	virtual ListenerHandle createListener(const AudioSceneHandle& audioSceneHandle, const glm::vec3& position) override;
+	void setPosition(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle, const float32 x, const float32 y, const float32 z) override;
+	void setPosition(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle, const glm::vec3& position) override;
+	glm::vec3 position(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle) const override;
 	
-	virtual void setPosition(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle, const float32 x, const float32 y, const float32 z) override;
-	virtual void setPosition(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle, const glm::vec3& position) override;
-	virtual glm::vec3 position(const AudioSceneHandle& audioSceneHandle, const SoundSourceHandle& soundSourceHandle) const override;
-	
-	virtual void setPosition(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle, const float32 x, const float32 y, const float32 z) override;
-	virtual void setPosition(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle, const glm::vec3& position) override;
-	virtual glm::vec3 position(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle) const override;
+	void setPosition(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle, const float32 x, const float32 y, const float32 z) override;
+	void setPosition(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle, const glm::vec3& position) override;
+	glm::vec3 position(const AudioSceneHandle& audioSceneHandle, const ListenerHandle& listenerHandle) const override;
 
 private:
 	ALCdevice* device_ = nullptr;

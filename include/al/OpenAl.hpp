@@ -19,43 +19,23 @@ namespace al
 
 inline void checkAlError(const std::string& filename, const int line)
 {
-	ALenum err(alGetError());
+	const ALenum error = alGetError();
+	const auto errorString = alGetString(error);
 
-	if (err != AL_NO_ERROR)
+	if (error != AL_NO_ERROR)
 	{
-		std::string error;
-
-		switch (err)
-		{
-			case AL_INVALID_NAME:	  				error = "INVALID_NAME";						break;
-			case AL_INVALID_OPERATION:	  			error = "INVALID_OPERATION";				break;
-			case AL_INVALID_ENUM:		  			error = "INVALID_ENUM";		  				break;
-			case AL_INVALID_VALUE:		  			error = "INVALID_VALUE";		  			break;
-			case AL_OUT_OF_MEMORY:		 			error = "OUT_OF_MEMORY";		  			break;
-		}
-
-		throw std::runtime_error(filename + " (" + std::to_string(line) + "): " + std::string("AL_") + error);
+		throw std::runtime_error(filename + " (" + std::to_string(line) + "): " + std::to_string(error) + ": " + errorString);
 	}
 }
 
 inline void checkAlError()
 {
-	ALenum err(alGetError());
+    const ALenum error = alGetError();
+    const auto errorString = alGetString(error);
 
-	if (err != AL_NO_ERROR)
+	if (error != AL_NO_ERROR)
 	{
-		std::string error;
-
-		switch (err)
-		{
-			case AL_INVALID_NAME:	  				error = "INVALID_NAME";						break;
-			case AL_INVALID_OPERATION:	  			error = "INVALID_OPERATION";				break;
-			case AL_INVALID_ENUM:		  			error = "INVALID_ENUM";		  				break;
-			case AL_INVALID_VALUE:		  			error = "INVALID_VALUE";		  			break;
-			case AL_OUT_OF_MEMORY:		 			error = "OUT_OF_MEMORY";		  			break;
-		}
-
-		throw std::runtime_error(std::string("AL_") + error);
+		throw std::runtime_error(std::to_string(error) + ": " + errorString);
 	}
 }
 

@@ -4,3 +4,6 @@
 [submodule "ice engine/ice_engine"]
 	path = ice engine/ice_engine
 	url = https://github.com/icebreakersentertainment/ice_engine.git
+[submodule "sdl/SDL"]
+	path = sdl/SDL
+	url = https://github.com/icebreakersentertainment/SDL.git
