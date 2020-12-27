@@ -13,12 +13,6 @@ if(MSVC)
   endif()
 endif()
 
-add_subdirectory(./openalsoft/openal-soft)
-
-if(NOT TARGET SDL2)
-  add_subdirectory(./sdl/SDL)
-endif()
-
 if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo OR ICEENGINE_ENABLE_DEBUG_LOGGING)
   list(APPEND OPENALSOFT_PLUGIN_DEFINITIONS -DICEENGINE_ENABLE_DEBUG_LOGGING)
 endif()
@@ -27,22 +21,27 @@ if(ICEENGINE_ENABLE_TRACE_LOGGING)
   list(APPEND OPENALSOFT_PLUGIN_DEFINITIONS -DICEENGINE_ENABLE_TRACE_LOGGING)
 endif()
 
-# Headers
-include_directories(include)
+option(ALSOFT_EXAMPLES  "Build example programs"  OFF)
+add_subdirectory(./openalsoft/openal-soft)
+
+find_package(glm REQUIRED)
+find_package(Boost REQUIRED)
+find_package(SDL2 REQUIRED)
 
 # Source
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(openalsoft_plugin SHARED ${SOURCES})
 
+# Headers
+target_include_directories(openalsoft_plugin PRIVATE include)
+
 target_include_directories(openalsoft_plugin PRIVATE ${ICEENGINE_INCLUDE_DIRS})
-target_include_directories(openalsoft_plugin PRIVATE ${BOOST_INCLUDE_DIRS})
-target_include_directories(openalsoft_plugin PRIVATE ${GLM_INCLUDE_DIRS})
-target_include_directories(openalsoft_plugin PRIVATE openalsoft/openal-soft/include)
-target_include_directories(openalsoft_plugin PRIVATE sdl/SDL/include)
+target_include_directories(openalsoft_plugin PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_compile_definitions(openalsoft_plugin PRIVATE ${OPENALSOFT_PLUGIN_DEFINITIONS})
 target_compile_options(openalsoft_plugin PRIVATE ${OPENALSOFT_PLUGIN_COMPILER_FLAGS})
 
-target_link_libraries(openalsoft_plugin OpenAL)
-target_link_libraries(openalsoft_plugin SDL2)
+target_link_libraries(openalsoft_plugin PRIVATE OpenAL)
+target_link_libraries(openalsoft_plugin PRIVATE glm::glm)
+target_link_libraries(openalsoft_plugin PRIVATE SDL2::SDL2)
