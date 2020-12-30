@@ -1,7 +1,6 @@
 #include "OpenAlSoft.hpp"
 
 #include <AL/alext.h>
-#include <Audioclient.h>
 
 #include <SDL_audio.h>
 
