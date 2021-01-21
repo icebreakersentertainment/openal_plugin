@@ -349,7 +349,9 @@ OpenAlSoft::OpenAlSoft(utilities::Properties* properties, fs::IFileSystem* fileS
 	
 	if (!device_)
 	{
-		throw std::runtime_error("Unable to initialize OpenAL");
+        const auto error = getAlError();
+
+		throw std::runtime_error(error->codeString + ": " + error->message);
 	}
 	
 	context_ = alcCreateContext(device_, nullptr);
